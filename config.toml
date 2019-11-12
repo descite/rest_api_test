@@ -1,4 +1,4 @@
-baseURL = "https://app.gitbook.com/@kadri-isakar/s/testing-hugo-vol1/"
+baseURL = "www.example.com"
 languageCode = "en-us"
 title = "My New Hugo Site"
 theme = "learn"
