@@ -8,3 +8,9 @@ fields:
 - type: datetime
   name: date
   label: date
+- name: text
+  type: text
+  config:
+    required: false
+  label: text
+  hidden: true
