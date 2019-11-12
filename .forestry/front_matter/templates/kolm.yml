@@ -14,3 +14,5 @@ fields:
     required: false
   label: text
   hidden: true
+pages:
+- content/howto/title.md
