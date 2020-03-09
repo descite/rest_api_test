@@ -18,6 +18,7 @@ paths:
       tags:
         - Engagements
       summary: Get List of Engagements
+      operationId: get-engagements
       description: >-
         Fetches a collection of engagements and related data. The results are
         paginated, and sorted by `start_date` in descending order.
