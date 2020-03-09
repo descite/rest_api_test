@@ -1,0 +1,2277 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0",
+    "description": "The platform REST API is the foundation of programmatic access to Glia and provides a robust set of endpoints that cover all Glia functions - this includes the management and configuration of sites, operators, queues, channels, etc. as well as controlling engagements, getting statistics and many more. It allows for clients to integrate Glia with their existing systems, other tools and automate a lot of tasks.",
+    "title": "REST API"
+  },
+  "host": "api.salemove.com",
+  "schemes": [
+    "https"
+  ],
+  "paths": {
+    "/engagements": {
+      "get": {
+        "tags": [
+          "Engagements"
+        ],
+        "summary": "Engagements",
+        "description": "Fetches a collection of engagements and related data. The results are paginated, and sorted by `start_date` in descending order.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Used to authenticate the user. Only `Bearer` access token is allowed.",
+            "required": true,
+            "default": "Bearer $access_token",
+            "type": "string",
+            "format": "string"
+          },
+          {
+            "name": "Accept",
+            "in": "header",
+            "description": "Must be `application/vnd.salemove.v1+json`.",
+            "required": true,
+            "default": "application/vnd.salemove.v1+json",
+            "type": "string",
+            "format": "string"
+          },
+          {
+            "name": "site_ids",
+            "in": "query",
+            "description": "A list of site IDs whose engagements are requested. The requester must be authorized to access the provided sites.",
+            "required": true,
+            "type": "array",
+            "format": "string",
+            "items": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "operator_ids",
+            "in": "query",
+            "description": "A list of operator IDs whose engagements are requested. If the requester is a `manager` on the sites, the `operator_ids` filter can be either omitted or be an empty array to query engagements conducted by any operator. If the requester is not a `manager`, they must specify their own ID in `operator_ids` filter.",
+            "required": false,
+            "type": "array",
+            "format": "string",
+            "items": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "start_date",
+            "in": "query",
+            "description": "The response will include engagements that happened from `start_date` forward in time.",
+            "required": false,
+            "type": "string",
+            "format": "string"
+          },
+          {
+            "name": "end_date",
+            "in": "query",
+            "description": "The response will include engagements that happened on or before the `end_date` and after the `start_date`.",
+            "required": false,
+            "type": "string",
+            "format": "string"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "If pagination is used then this parameter specifies what page is requested.",
+            "required": false,
+            "type": "number",
+            "format": "integer"
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "description": "If pagination is used then this parameter specifies the number of engagements per page.",
+            "required": false,
+            "type": "array",
+            "format": "string",
+            "items": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "description": "Specifies whether the results should be sorted in ascending (`asc`) or descending (`desc`) order. By default, engagements are sorted by their start time in descending order.",
+            "required": false,
+            "type": "number",
+            "format": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully get a list of engagements for a given site.",
+            "examples": {
+              "GET engagements result 200": {
+                "next_page": "https://api.salemove.com/engagements?page=2&per_page=3",
+                "last_page": "https://api.salemove.com/engagements?page=22&per_page=3",
+                "engagements": [
+                  {
+                    "id": "eea868ad-9d58-4db9-a663-5fd766728980",
+                    "engagement_type": "proactive",
+                    "created_at": "2017-07-07T13:47:21.150Z",
+                    "duration": 10,
+                    "visitor_name": "Sasha Brown",
+                    "visitor_browser": "Chrome",
+                    "visitor_device_type": "mobile",
+                    "visitor_id": "039124e6-b4e8-4a0d-b420-5b6696c7ecb4",
+                    "cobrowsing_used": true,
+                    "video_used": true,
+                    "audio_used": true,
+                    "flagged": false,
+                    "queue_wait_time": 42,
+                    "platform": "omnicore",
+                    "audio_recording_urls": [
+                      "https://api.salemove.com/sub_engagements/1122834/recordings/XaMiTQI"
+                    ],
+                    "crm_forwarded": false,
+                    "summary_forwarded": false,
+                    "visitor": {
+                      "href": "https://api.salemove.com/visitors/039124e6-b4e8-4a0d-b420-5b6696c7ecb4"
+                    },
+                    "chat_transcript": {
+                      "href": "https://api.salemove.com/engagements/eea868ad-9d58-4db9-a663-5fd766728980/chat_transcript"
+                    },
+                    "operators": [
+                      {
+                        "href": "https://api.salemove.com/operators/f42811bc-8519-4d33-bbb1-36d4555ecb0a"
+                      }
+                    ],
+                    "queues": [
+                      {
+                        "id": "82af2b5d-4ea5-40c8-bab2-a87d39598a81",
+                        "name": "Queue name"
+                      }
+                    ]
+                  },
+                  {
+                    "id": "dc71edb4-9c54-4ead-9d03-4c31a69315be",
+                    "engagement_type": "reactive",
+                    "created_at": "2017-07-06T11:46:37.569Z",
+                    "duration": 1,
+                    "visitor_name": "Visitor #6",
+                    "visitor_browser": "Firefox",
+                    "visitor_device_type": "desktop",
+                    "visitor_id": "41fb129c-fd0c-4f8b-8ca5-657787917c4b",
+                    "cobrowsing_used": false,
+                    "video_used": false,
+                    "flagged": false,
+                    "audio_recording_urls": [
+                      "https://api.salemove.com/sub_engagements/1120220/twilio_recordings/4994"
+                    ],
+                    "crm_forwarded": false,
+                    "summary_forwarded": true,
+                    "queue_wait_time": 10,
+                    "platform": "omnicore",
+                    "visitor": {
+                      "href": "https://api.salemove.com/visitors/41fb129c-fd0c-4f8b-8ca5-657787917c4b"
+                    },
+                    "source": "tab",
+                    "chat_transcript": {
+                      "href": "https://api.salemove.com/engagements/dc71edb4-9c54-4ead-9d03-4c31a69315be/chat_transcript"
+                    },
+                    "operators": [
+                      {
+                        "href": "https://api.salemove.com/operators/c8b52f0b-ad05-4c71-8c98-5056f07c4d1a"
+                      }
+                    ],
+                    "queues": [
+                      {
+                        "id": "82af2b5d-4ea5-40c8-bab2-a87d39598a81",
+                        "name": "Queue name"
+                      }
+                    ]
+                  },
+                  {
+                    "id": "c0828e2e-3e29-4881-8dcc-3d96563a68fe",
+                    "engagement_type": "proactive",
+                    "created_at": "2017-07-06T11:23:54.508Z",
+                    "duration": 330,
+                    "visitor_name": "Jordan Green",
+                    "visitor_browser": "Chrome",
+                    "visitor_device_type": "mobile",
+                    "visitor_id": "41fb129c-fd0c-4f8b-8ca5-657787917c4b",
+                    "cobrowsing_used": true,
+                    "video_used": false,
+                    "audio_used": false,
+                    "flagged": false,
+                    "audio_recording_urls": [],
+                    "crm_forwarded": false,
+                    "summary_forwarded": true,
+                    "platform": "omnicore",
+                    "visitor": {
+                      "href": "https://api.salemove.com/visitors/41fb129c-fd0c-4f8b-8ca5-657787917c4b"
+                    },
+                    "chat_transcript": {
+                      "href": "https://api.salemove.com/engagements/c0828e2e-3e29-4881-8dcc-3d96563a68fe/chat_transcript"
+                    },
+                    "operators": [
+                      {
+                        "href": "https://api.salemove.com/operators/f42811bc-8519-4d33-bbb1-36d4555ecb0a"
+                      }
+                    ]
+                  }
+                ]
+              }
+            },
+            "schema": {
+              "type": "object",
+              "properties": {
+                "next_page": {
+                  "type": "string"
+                },
+                "last_page": {
+                  "type": "string"
+                },
+                "engagements": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "x-examples": {
+                      "Engagement": {
+                        "id": "eea868ad-9d58-4db9-a663-5fd766728980",
+                        "engagement_type": "reactive",
+                        "created_at": "2017-07-07T13:47:21.150Z",
+                        "duration": 268,
+                        "visitor_name": "Sasha Brown",
+                        "visitor_browser": "Chrome",
+                        "visitor_device_type": "mobile",
+                        "visitor_id": "039124e6-b4e8-4a0d-b420-5b6696c7ecb4",
+                        "cobrowsing_used": true,
+                        "video_used": true,
+                        "audio_used": true,
+                        "flagged": false,
+                        "queue_wait_time": 42,
+                        "platform": "omnicore",
+                        "audio_recording_urls": [
+                          "https://api.salemove.com/sub_engagements/1122834/recordings/XaMiTQI"
+                        ],
+                        "crm_forwarded": false,
+                        "summary_forwarded": false,
+                        "visitor": {
+                          "href": "https://api.salemove.com/visitors/039124e6-b4e8-4a0d-b420-5b6696c7ecb4"
+                        },
+                        "chat_transcript": {
+                          "href": "https://api.salemove.com/engagements/eea868ad-9d58-4db9-a663-5fd766728980/chat_transcript"
+                        },
+                        "operators": [
+                          {
+                            "href": "https://api.salemove.com/operators/f42811bc-8519-4d33-bbb1-36d4555ecb0a"
+                          },
+                          {
+                            "href": "https://api.salemove.com/operators/0fca6673-1938-4a1f-a72e-262c19700ab6"
+                          }
+                        ],
+                        "queues": [
+                          {
+                            "id": "82af2b5d-4ea5-40c8-bab2-a87d39598a81",
+                            "name": "Queue name"
+                          }
+                        ],
+                        "legs": [
+                          {
+                            "id": "78cb0e78-c995-461c-8659-d2364025a33e",
+                            "operator": {
+                              "id": "f42811bc-8519-4d33-bbb1-36d4555ecb0a"
+                            },
+                            "site": {
+                              "id": "9dd25b48-c988-48cd-a4c3-56384d317e41"
+                            },
+                            "requested_at": "2017-07-07T13:47:10.000Z",
+                            "accepted_at": "2017-07-07T13:47:21.150Z",
+                            "request_type": "reactive",
+                            "request_source": "tab",
+                            "offered_media_type": "video",
+                            "accepted_media_type": "text",
+                            "request_queues": [
+                              {
+                                "id": "82af2b5d-4ea5-40c8-bab2-a87d39598a81",
+                                "name": "Queue name"
+                              }
+                            ],
+                            "duration": 109,
+                            "highest_visitor_media_type": "text",
+                            "highest_operator_media_type": "text",
+                            "used_cobrowsing": false,
+                            "ended_at": "2017-07-07T13:49:10.150Z",
+                            "end_reason": "transfer"
+                          },
+                          {
+                            "id": "6a33a95a-472b-433d-b107-b1c5426e6865",
+                            "operator": {
+                              "id": "0fca6673-1938-4a1f-a72e-262c19700ab6"
+                            },
+                            "site": {
+                              "id": "9dd25b48-c988-48cd-a4c3-56384d317e41"
+                            },
+                            "requested_at": "2017-07-07T13:48:55.000Z",
+                            "accepted_at": "2017-07-07T13:49:10.150Z",
+                            "request_type": "transfer",
+                            "request_source": null,
+                            "offered_media_type": "text",
+                            "accepted_media_type": "text",
+                            "request_queues": null,
+                            "duration": 158,
+                            "highest_visitor_media_type": "video",
+                            "highest_operator_media_type": "audio",
+                            "used_cobrowsing": true,
+                            "ended_at": "2017-07-07T13:51:48.150Z",
+                            "end_reason": "visitor_left"
+                          }
+                        ]
+                      }
+                    },
+                    "title": "Engagement",
+                    "description": "",
+                    "x-tags": [
+                      "engagement"
+                    ],
+                    "properties": {
+                      "id": {
+                        "description": "Engagement ID.",
+                        "type": "string"
+                      },
+                      "engagement_type": {
+                        "type": "string",
+                        "description": "Engagement type. Can be one of `proactive`, `reactive`."
+                      },
+                      "created_at": {
+                        "type": "string",
+                        "description": "An ISO-8601 timestamp of when the engagement request was created."
+                      },
+                      "duration": {
+                        "type": "integer",
+                        "description": "Engagement duration in seconds."
+                      },
+                      "visitor_name": {
+                        "type": "string",
+                        "description": "Visitor's name."
+                      },
+                      "visitor_browser": {
+                        "type": "string",
+                        "description": "Visitor's browser."
+                      },
+                      "visitor_device_type": {
+                        "type": "string",
+                        "description": "Visitor's device type."
+                      },
+                      "visitor_id": {
+                        "type": "string",
+                        "description": "Visitor ID."
+                      },
+                      "cobrowsing_used": {
+                        "type": "boolean",
+                        "description": "Whether CoBrowsing was used or not. "
+                      },
+                      "video_used": {
+                        "type": "boolean",
+                        "description": "Whether video was used or not."
+                      },
+                      "audio_used": {
+                        "type": "boolean",
+                        "description": "Whether audio was used or not."
+                      },
+                      "flagged": {
+                        "type": "boolean",
+                        "description": "Whether the engagement has been flagged or not."
+                      },
+                      "summary_forwarded": {
+                        "type": "boolean",
+                        "description": "Whether the summary has already been forwarded."
+                      },
+                      "platform": {
+                        "type": "string",
+                        "description": "The platform where the engagement was initiated. Possible values are: `omnibrowse` - engagement was requested from Call Visualizer (either in Glia Hub or embedded in CRM), `omnicore` - all other cases."
+                      },
+                      "visitor": {
+                        "type": "object",
+                        "description": "The visitor."
+                      },
+                      "chat_transcript": {
+                        "type": "object",
+                        "description": "Engagement chat transcript."
+                      },
+                      "operators": {
+                        "type": "array",
+                        "description": "A list of engagement operators.",
+                        "items": {
+                          "type": "object"
+                        }
+                      },
+                      "source": {
+                        "type": "string",
+                        "description": "One of engagement sources."
+                      },
+                      "queues": {
+                        "type": "array",
+                        "description": "A list of queues that the visitor was enqueued in before starting the engagement. This value is present only for reactive engagements started via queueing.",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "legs": {
+                        "type": "array",
+                        "description": "A list of engagement legs. Engagement starts with one leg. A leg is added each time the engagement is transferred.",
+                        "items": {
+                          "title": "Leg",
+                          "type": "object",
+                          "x-tags": [
+                            "engagement"
+                          ],
+                          "x-examples": {
+                            "Leg": {
+                              "id": "78cb0e78-c995-461c-8659-d2364025a33e",
+                              "operator": {
+                                "id": "f42811bc-8519-4d33-bbb1-36d4555ecb0a"
+                              },
+                              "site": {
+                                "id": "9dd25b48-c988-48cd-a4c3-56384d317e41"
+                              },
+                              "requested_at": "2017-07-07T13:47:10.000Z",
+                              "accepted_at": "2017-07-07T13:47:21.150Z",
+                              "request_type": "reactive",
+                              "request_source": "tab",
+                              "offered_media_type": "video",
+                              "accepted_media_type": "text",
+                              "request_queues": [
+                                {
+                                  "id": "82af2b5d-4ea5-40c8-bab2-a87d39598a81",
+                                  "name": "Queue name"
+                                }
+                              ],
+                              "duration": 109,
+                              "highest_visitor_media_type": "text",
+                              "highest_operator_media_type": "text",
+                              "used_cobrowsing": false,
+                              "ended_at": "2017-07-07T13:49:10.150Z",
+                              "end_reason": "transfer"
+                            }
+                          },
+                          "description": "",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "description": "Engagement leg ID."
+                            },
+                            "site": {
+                              "type": "object",
+                              "description": "Site information."
+                            },
+                            "requested_a": {
+                              "type": "string",
+                              "description": "Engagement or transfer request ISO-8601 timestamp."
+                            },
+                            "accepted_at": {
+                              "type": "string",
+                              "description": "Engagement or transfer accept ISO-8601 timestamp."
+                            },
+                            "request_type": {
+                              "type": "string",
+                              "description": "Request type. Possible values are `reactive`, `proactive`, and `transfer`.",
+                              "enum": [
+                                "reactive",
+                                "proactive",
+                                "transfer"
+                              ]
+                            },
+                            "request_source": {
+                              "type": "string",
+                              "description": "Request source. See `enum` for available values.",
+                              "enum": [
+                                "button_embed",
+                                "callout",
+                                "facebook",
+                                "hotlink",
+                                "offline_phone",
+                                "outbound_call",
+                                "outbound_text",
+                                "sdk",
+                                "slack",
+                                "sms",
+                                "tab",
+                                "visitor_integrator",
+                                "whatsapp",
+                                "<empty>"
+                              ]
+                            },
+                            "offered_media_type": {
+                              "type": "string",
+                              "description": "Engagement offered or requested media type. Possible values are `text`, `audio`, `phone` and `video`.",
+                              "enum": [
+                                "text",
+                                "audio",
+                                "phone",
+                                "video"
+                              ]
+                            },
+                            "accepted_media_type": {
+                              "type": "string",
+                              "description": "Engagement accepted media type. Possible values are `text`, `audio`, `phone` and `video`.",
+                              "enum": [
+                                "text",
+                                "audio",
+                                "phone",
+                                "video"
+                              ]
+                            },
+                            "request_queues": {
+                              "type": "array",
+                              "description": "Engagement or transfer request queues. NULL if queues were not used.",
+                              "items": {
+                                "type": "string"
+                              }
+                            },
+                            "duration": {
+                              "type": "integer",
+                              "description": "Engagement leg duration in seconds."
+                            },
+                            "highest_visitor_media_type": {
+                              "type": "string",
+                              "description": "Highest media type visitor used during this engagement leg. Possible values are `text`, `audio` and `video`.",
+                              "enum": [
+                                "text",
+                                "audio",
+                                "video"
+                              ]
+                            },
+                            "highest_operator_media_type": {
+                              "type": "string",
+                              "description": "Highest media type operator used during this engagement leg. Possible values are `text`, `audio` and `video`. ",
+                              "enum": [
+                                "text",
+                                "audio",
+                                "video"
+                              ]
+                            },
+                            "used_cobrowsing": {
+                              "type": "boolean",
+                              "description": "True, if CoBrowsing was used during the engagement, otherwise false."
+                            },
+                            "ended_at": {
+                              "type": "string",
+                              "description": "ISO-8601 timestamp when engagement was ended or when engagement was transferred out."
+                            },
+                            "end_reason": {
+                              "type": "string",
+                              "description": "Engagement leg end reason. Possible values are `visitor_left`, `visitor_hung_up`, `operator_left`, `operator_hung_up`, `error` and `transfer`. ",
+                              "enum": [
+                                "visitor_left",
+                                "visitor_hung_up",
+                                "operator_left",
+                                "operator_hung_up",
+                                "error",
+                                "transfer"
+                              ]
+                            },
+                            "operator": {
+                              "type": "object",
+                              "description": "Operator information."
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "site",
+                            "requested_a",
+                            "accepted_at",
+                            "request_type",
+                            "request_source",
+                            "offered_media_type",
+                            "accepted_media_type",
+                            "duration",
+                            "highest_visitor_media_type",
+                            "highest_operator_media_type",
+                            "used_cobrowsing",
+                            "ended_at",
+                            "end_reason",
+                            "operator"
+                          ]
+                        }
+                      },
+                      "queue_wait_time": {
+                        "type": "integer",
+                        "description": "The time visitor spent in queue before the engagement, in seconds. This value is present only for reactive engagements started via queueing. "
+                      },
+                      "audio_recording_urls": {
+                        "type": "array",
+                        "description": "A list of audio recordings URLs.",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "crm_forwarded": {
+                        "type": "boolean",
+                        "description": "Whether the CRM Export has already occurred or not."
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "engagement_type",
+                      "created_at",
+                      "duration",
+                      "visitor_name",
+                      "visitor_browser",
+                      "visitor_device_type",
+                      "visitor_id",
+                      "cobrowsing_used",
+                      "video_used",
+                      "audio_used",
+                      "flagged",
+                      "summary_forwarded",
+                      "platform",
+                      "visitor",
+                      "chat_transcript",
+                      "operators",
+                      "legs",
+                      "audio_recording_urls",
+                      "crm_forwarded"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/engagements/{engagement_id}": {
+      "get": {
+        "tags": [
+          "Engagements"
+        ],
+        "summary": "Engagement",
+        "description": "Fetches a single engagement by `engagement_id`. The user whose credentials are contained in the `Authorization` request header must be authorized to access the site on which the engagement occurred.<br>**Note:** Due to post-processing, audio recordings are available shortly after an engagement ends.<br>In a case where the recording URL is immediately fulfilled with recording, requesting a URL provided by the response in `audio_recording_urls` will generate and return a temporary URL to the recording file. The generated URL expires in 15 minutes.<br>In a case where the recording is not yet available due to post-processing, a `GET` request for a recording URL will return `204 No Content`.",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "name": "engagement_id",
+            "in": "path",
+            "description": "Engagement's ID.",
+            "required": true,
+            "type": "string",
+            "format": "string"
+          },
+          {
+            "type": "string",
+            "in": "header",
+            "name": "Accept",
+            "description": "Must be `application/vnd.salemove.v1+json`.",
+            "default": "application/vnd.salemove.v1+json",
+            "required": true
+          },
+          {
+            "type": "string",
+            "in": "header",
+            "name": "Authorization",
+            "description": "Used to authorize the user. Only `Bearer` access token is allowed.",
+            "required": true,
+            "default": "Bearer $access_token"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Reguested engagement is successfully fetched.",
+            "examples": {
+              "GET engagements/engagement_id result 200": {
+                "id": "eea868ad-9d58-4db9-a663-5fd766728980",
+                "engagement_type": "reactive",
+                "created_at": "2017-07-07T13:47:21.150Z",
+                "duration": 268,
+                "visitor_name": "Sasha Brown",
+                "visitor_browser": "Chrome",
+                "visitor_device_type": "mobile",
+                "visitor_id": "039124e6-b4e8-4a0d-b420-5b6696c7ecb4",
+                "cobrowsing_used": true,
+                "video_used": true,
+                "audio_used": true,
+                "flagged": false,
+                "queue_wait_time": 42,
+                "platform": "omnicore",
+                "audio_recording_urls": [
+                  "https://api.salemove.com/sub_engagements/1122834/recordings/XaMiTQI"
+                ],
+                "crm_forwarded": false,
+                "summary_forwarded": false,
+                "visitor": {
+                  "href": "https://api.salemove.com/visitors/039124e6-b4e8-4a0d-b420-5b6696c7ecb4"
+                },
+                "chat_transcript": {
+                  "href": "https://api.salemove.com/engagements/eea868ad-9d58-4db9-a663-5fd766728980/chat_transcript"
+                },
+                "operators": [
+                  {
+                    "href": "https://api.salemove.com/operators/f42811bc-8519-4d33-bbb1-36d4555ecb0a"
+                  },
+                  {
+                    "href": "https://api.salemove.com/operators/0fca6673-1938-4a1f-a72e-262c19700ab6"
+                  }
+                ],
+                "queues": [
+                  {
+                    "id": "82af2b5d-4ea5-40c8-bab2-a87d39598a81",
+                    "name": "Queue name"
+                  }
+                ],
+                "legs": [
+                  {
+                    "id": "78cb0e78-c995-461c-8659-d2364025a33e",
+                    "operator": {
+                      "id": "f42811bc-8519-4d33-bbb1-36d4555ecb0a"
+                    },
+                    "site": {
+                      "id": "9dd25b48-c988-48cd-a4c3-56384d317e41"
+                    },
+                    "requested_at": "2017-07-07T13:47:10.000Z",
+                    "accepted_at": "2017-07-07T13:47:21.150Z",
+                    "request_type": "reactive",
+                    "request_source": "tab",
+                    "offered_media_type": "video",
+                    "accepted_media_type": "text",
+                    "request_queues": [
+                      {
+                        "id": "82af2b5d-4ea5-40c8-bab2-a87d39598a81",
+                        "name": "Queue name"
+                      }
+                    ],
+                    "duration": 109,
+                    "highest_visitor_media_type": "text",
+                    "highest_operator_media_type": "text",
+                    "used_cobrowsing": false,
+                    "ended_at": "2017-07-07T13:49:10.150Z",
+                    "end_reason": "transfer"
+                  },
+                  {
+                    "id": "6a33a95a-472b-433d-b107-b1c5426e6865",
+                    "operator": {
+                      "id": "0fca6673-1938-4a1f-a72e-262c19700ab6"
+                    },
+                    "site": {
+                      "id": "9dd25b48-c988-48cd-a4c3-56384d317e41"
+                    },
+                    "requested_at": "2017-07-07T13:48:55.000Z",
+                    "accepted_at": "2017-07-07T13:49:10.150Z",
+                    "request_type": "transfer",
+                    "request_source": null,
+                    "offered_media_type": "text",
+                    "accepted_media_type": "text",
+                    "request_queues": null,
+                    "duration": 158,
+                    "highest_visitor_media_type": "video",
+                    "highest_operator_media_type": "audio",
+                    "used_cobrowsing": true,
+                    "ended_at": "2017-07-07T13:51:48.150Z",
+                    "end_reason": "visitor_left"
+                  }
+                ]
+              }
+            },
+            "schema": {
+              "type": "object",
+              "x-examples": {
+                "Engagement": {
+                  "id": "eea868ad-9d58-4db9-a663-5fd766728980",
+                  "engagement_type": "reactive",
+                  "created_at": "2017-07-07T13:47:21.150Z",
+                  "duration": 268,
+                  "visitor_name": "Sasha Brown",
+                  "visitor_browser": "Chrome",
+                  "visitor_device_type": "mobile",
+                  "visitor_id": "039124e6-b4e8-4a0d-b420-5b6696c7ecb4",
+                  "cobrowsing_used": true,
+                  "video_used": true,
+                  "audio_used": true,
+                  "flagged": false,
+                  "queue_wait_time": 42,
+                  "platform": "omnicore",
+                  "audio_recording_urls": [
+                    "https://api.salemove.com/sub_engagements/1122834/recordings/XaMiTQI"
+                  ],
+                  "crm_forwarded": false,
+                  "summary_forwarded": false,
+                  "visitor": {
+                    "href": "https://api.salemove.com/visitors/039124e6-b4e8-4a0d-b420-5b6696c7ecb4"
+                  },
+                  "chat_transcript": {
+                    "href": "https://api.salemove.com/engagements/eea868ad-9d58-4db9-a663-5fd766728980/chat_transcript"
+                  },
+                  "operators": [
+                    {
+                      "href": "https://api.salemove.com/operators/f42811bc-8519-4d33-bbb1-36d4555ecb0a"
+                    },
+                    {
+                      "href": "https://api.salemove.com/operators/0fca6673-1938-4a1f-a72e-262c19700ab6"
+                    }
+                  ],
+                  "queues": [
+                    {
+                      "id": "82af2b5d-4ea5-40c8-bab2-a87d39598a81",
+                      "name": "Queue name"
+                    }
+                  ],
+                  "legs": [
+                    {
+                      "id": "78cb0e78-c995-461c-8659-d2364025a33e",
+                      "operator": {
+                        "id": "f42811bc-8519-4d33-bbb1-36d4555ecb0a"
+                      },
+                      "site": {
+                        "id": "9dd25b48-c988-48cd-a4c3-56384d317e41"
+                      },
+                      "requested_at": "2017-07-07T13:47:10.000Z",
+                      "accepted_at": "2017-07-07T13:47:21.150Z",
+                      "request_type": "reactive",
+                      "request_source": "tab",
+                      "offered_media_type": "video",
+                      "accepted_media_type": "text",
+                      "request_queues": [
+                        {
+                          "id": "82af2b5d-4ea5-40c8-bab2-a87d39598a81",
+                          "name": "Queue name"
+                        }
+                      ],
+                      "duration": 109,
+                      "highest_visitor_media_type": "text",
+                      "highest_operator_media_type": "text",
+                      "used_cobrowsing": false,
+                      "ended_at": "2017-07-07T13:49:10.150Z",
+                      "end_reason": "transfer"
+                    },
+                    {
+                      "id": "6a33a95a-472b-433d-b107-b1c5426e6865",
+                      "operator": {
+                        "id": "0fca6673-1938-4a1f-a72e-262c19700ab6"
+                      },
+                      "site": {
+                        "id": "9dd25b48-c988-48cd-a4c3-56384d317e41"
+                      },
+                      "requested_at": "2017-07-07T13:48:55.000Z",
+                      "accepted_at": "2017-07-07T13:49:10.150Z",
+                      "request_type": "transfer",
+                      "request_source": null,
+                      "offered_media_type": "text",
+                      "accepted_media_type": "text",
+                      "request_queues": null,
+                      "duration": 158,
+                      "highest_visitor_media_type": "video",
+                      "highest_operator_media_type": "audio",
+                      "used_cobrowsing": true,
+                      "ended_at": "2017-07-07T13:51:48.150Z",
+                      "end_reason": "visitor_left"
+                    }
+                  ]
+                }
+              },
+              "title": "Engagement",
+              "description": "",
+              "x-tags": [
+                "engagement"
+              ],
+              "properties": {
+                "id": {
+                  "description": "Engagement ID.",
+                  "type": "string"
+                },
+                "engagement_type": {
+                  "type": "string",
+                  "description": "Engagement type. Can be one of `proactive`, `reactive`."
+                },
+                "created_at": {
+                  "type": "string",
+                  "description": "An ISO-8601 timestamp of when the engagement request was created."
+                },
+                "duration": {
+                  "type": "integer",
+                  "description": "Engagement duration in seconds."
+                },
+                "visitor_name": {
+                  "type": "string",
+                  "description": "Visitor's name."
+                },
+                "visitor_browser": {
+                  "type": "string",
+                  "description": "Visitor's browser."
+                },
+                "visitor_device_type": {
+                  "type": "string",
+                  "description": "Visitor's device type."
+                },
+                "visitor_id": {
+                  "type": "string",
+                  "description": "Visitor ID."
+                },
+                "cobrowsing_used": {
+                  "type": "boolean",
+                  "description": "Whether CoBrowsing was used or not. "
+                },
+                "video_used": {
+                  "type": "boolean",
+                  "description": "Whether video was used or not."
+                },
+                "audio_used": {
+                  "type": "boolean",
+                  "description": "Whether audio was used or not."
+                },
+                "flagged": {
+                  "type": "boolean",
+                  "description": "Whether the engagement has been flagged or not."
+                },
+                "summary_forwarded": {
+                  "type": "boolean",
+                  "description": "Whether the summary has already been forwarded."
+                },
+                "platform": {
+                  "type": "string",
+                  "description": "The platform where the engagement was initiated. Possible values are: `omnibrowse` - engagement was requested from Call Visualizer (either in Glia Hub or embedded in CRM), `omnicore` - all other cases."
+                },
+                "visitor": {
+                  "type": "object",
+                  "description": "The visitor."
+                },
+                "chat_transcript": {
+                  "type": "object",
+                  "description": "Engagement chat transcript."
+                },
+                "operators": {
+                  "type": "array",
+                  "description": "A list of engagement operators.",
+                  "items": {
+                    "type": "object"
+                  }
+                },
+                "source": {
+                  "type": "string",
+                  "description": "One of engagement sources."
+                },
+                "queues": {
+                  "type": "array",
+                  "description": "A list of queues that the visitor was enqueued in before starting the engagement. This value is present only for reactive engagements started via queueing.",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "legs": {
+                  "type": "array",
+                  "description": "A list of engagement legs. Engagement starts with one leg. A leg is added each time the engagement is transferred.",
+                  "items": {
+                    "title": "Leg",
+                    "type": "object",
+                    "x-tags": [
+                      "engagement"
+                    ],
+                    "x-examples": {
+                      "Leg": {
+                        "id": "78cb0e78-c995-461c-8659-d2364025a33e",
+                        "operator": {
+                          "id": "f42811bc-8519-4d33-bbb1-36d4555ecb0a"
+                        },
+                        "site": {
+                          "id": "9dd25b48-c988-48cd-a4c3-56384d317e41"
+                        },
+                        "requested_at": "2017-07-07T13:47:10.000Z",
+                        "accepted_at": "2017-07-07T13:47:21.150Z",
+                        "request_type": "reactive",
+                        "request_source": "tab",
+                        "offered_media_type": "video",
+                        "accepted_media_type": "text",
+                        "request_queues": [
+                          {
+                            "id": "82af2b5d-4ea5-40c8-bab2-a87d39598a81",
+                            "name": "Queue name"
+                          }
+                        ],
+                        "duration": 109,
+                        "highest_visitor_media_type": "text",
+                        "highest_operator_media_type": "text",
+                        "used_cobrowsing": false,
+                        "ended_at": "2017-07-07T13:49:10.150Z",
+                        "end_reason": "transfer"
+                      }
+                    },
+                    "description": "",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "description": "Engagement leg ID."
+                      },
+                      "site": {
+                        "type": "object",
+                        "description": "Site information."
+                      },
+                      "requested_a": {
+                        "type": "string",
+                        "description": "Engagement or transfer request ISO-8601 timestamp."
+                      },
+                      "accepted_at": {
+                        "type": "string",
+                        "description": "Engagement or transfer accept ISO-8601 timestamp."
+                      },
+                      "request_type": {
+                        "type": "string",
+                        "description": "Request type. Possible values are `reactive`, `proactive`, and `transfer`.",
+                        "enum": [
+                          "reactive",
+                          "proactive",
+                          "transfer"
+                        ]
+                      },
+                      "request_source": {
+                        "type": "string",
+                        "description": "Request source. See `enum` for available values.",
+                        "enum": [
+                          "button_embed",
+                          "callout",
+                          "facebook",
+                          "hotlink",
+                          "offline_phone",
+                          "outbound_call",
+                          "outbound_text",
+                          "sdk",
+                          "slack",
+                          "sms",
+                          "tab",
+                          "visitor_integrator",
+                          "whatsapp",
+                          "<empty>"
+                        ]
+                      },
+                      "offered_media_type": {
+                        "type": "string",
+                        "description": "Engagement offered or requested media type. Possible values are `text`, `audio`, `phone` and `video`.",
+                        "enum": [
+                          "text",
+                          "audio",
+                          "phone",
+                          "video"
+                        ]
+                      },
+                      "accepted_media_type": {
+                        "type": "string",
+                        "description": "Engagement accepted media type. Possible values are `text`, `audio`, `phone` and `video`.",
+                        "enum": [
+                          "text",
+                          "audio",
+                          "phone",
+                          "video"
+                        ]
+                      },
+                      "request_queues": {
+                        "type": "array",
+                        "description": "Engagement or transfer request queues. NULL if queues were not used.",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "duration": {
+                        "type": "integer",
+                        "description": "Engagement leg duration in seconds."
+                      },
+                      "highest_visitor_media_type": {
+                        "type": "string",
+                        "description": "Highest media type visitor used during this engagement leg. Possible values are `text`, `audio` and `video`.",
+                        "enum": [
+                          "text",
+                          "audio",
+                          "video"
+                        ]
+                      },
+                      "highest_operator_media_type": {
+                        "type": "string",
+                        "description": "Highest media type operator used during this engagement leg. Possible values are `text`, `audio` and `video`. ",
+                        "enum": [
+                          "text",
+                          "audio",
+                          "video"
+                        ]
+                      },
+                      "used_cobrowsing": {
+                        "type": "boolean",
+                        "description": "True, if CoBrowsing was used during the engagement, otherwise false."
+                      },
+                      "ended_at": {
+                        "type": "string",
+                        "description": "ISO-8601 timestamp when engagement was ended or when engagement was transferred out."
+                      },
+                      "end_reason": {
+                        "type": "string",
+                        "description": "Engagement leg end reason. Possible values are `visitor_left`, `visitor_hung_up`, `operator_left`, `operator_hung_up`, `error` and `transfer`. ",
+                        "enum": [
+                          "visitor_left",
+                          "visitor_hung_up",
+                          "operator_left",
+                          "operator_hung_up",
+                          "error",
+                          "transfer"
+                        ]
+                      },
+                      "operator": {
+                        "type": "object",
+                        "description": "Operator information."
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "site",
+                      "requested_a",
+                      "accepted_at",
+                      "request_type",
+                      "request_source",
+                      "offered_media_type",
+                      "accepted_media_type",
+                      "duration",
+                      "highest_visitor_media_type",
+                      "highest_operator_media_type",
+                      "used_cobrowsing",
+                      "ended_at",
+                      "end_reason",
+                      "operator"
+                    ]
+                  }
+                },
+                "queue_wait_time": {
+                  "type": "integer",
+                  "description": "The time visitor spent in queue before the engagement, in seconds. This value is present only for reactive engagements started via queueing. "
+                },
+                "audio_recording_urls": {
+                  "type": "array",
+                  "description": "A list of audio recordings URLs.",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "crm_forwarded": {
+                  "type": "boolean",
+                  "description": "Whether the CRM Export has already occurred or not."
+                }
+              },
+              "required": [
+                "id",
+                "engagement_type",
+                "created_at",
+                "duration",
+                "visitor_name",
+                "visitor_browser",
+                "visitor_device_type",
+                "visitor_id",
+                "cobrowsing_used",
+                "video_used",
+                "audio_used",
+                "flagged",
+                "summary_forwarded",
+                "platform",
+                "visitor",
+                "chat_transcript",
+                "operators",
+                "legs",
+                "audio_recording_urls",
+                "crm_forwarded"
+              ]
+            }
+          },
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      },
+      "parameters": [
+        {
+          "type": "string",
+          "name": "engagement_id",
+          "in": "path",
+          "required": true,
+          "description": "Engagement ID"
+        }
+      ]
+    },
+    "/operators": {
+      "post": {
+        "tags": [
+          "Operators"
+        ],
+        "summary": "Create a New Operator",
+        "description": "Creates a new operator.",
+        "operationId": "uploadFile",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "type": "object",
+              "xml": {
+                "name": "Category"
+              },
+              "title": "Operator",
+              "x-tags": [
+                "operator"
+              ],
+              "description": "",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "The name of the operator."
+                },
+                "email": {
+                  "type": "string",
+                  "description": "The email of the operator. It must be unique."
+                },
+                "audio_source": {
+                  "type": "string",
+                  "description": "The audio device used for audio calls. One of `computer` or `phone` or `sip_phone`. Default value is `computer`. Additional audio sources may be added in the future."
+                },
+                "phone": {
+                  "type": "string",
+                  "description": "The phone number of the operator. The supported format is <a href=\"https://js-sdk-docs.salemove.com/extra/glossary.md.html#phone-numbers\">E.164</a>. Must be set if `audio_source` is `phone`."
+                },
+                "phone_extension": {
+                  "type": "string",
+                  "description": "The phone number extension of the operator. A valid extension contains 1-7 digits and any number of `,` characters. There is an initial two second delay time before the first extension character is processed. Each `,` character in the extension adds a two second wait time before the next character is processed. Maximum length is 25 characters. Valid only if `phone` is also set."
+                },
+                "sip_domain_id": {
+                  "type": "string",
+                  "description": "The ID of the SIP domain used for SIP calls. Must be set if `audio_source` is `sip_phone`."
+                },
+                "sip_extension": {
+                  "type": "string",
+                  "description": "The SIP extension of the operator. Maximum length is 30 characters. An RFC3261 compliant format is supported. Valid only if `sip_domain_id` is also set. Must be set if `audio_source` is `sip_phone`."
+                },
+                "password": {
+                  "type": "string",
+                  "description": "The password of the operator."
+                },
+                "password_confirmation": {
+                  "type": "string",
+                  "description": "The password of the operator. The value of the fields `password` and `password_confirmation` must be identical."
+                },
+                "assignments": {
+                  "description": "An array of operator's assignments. Specifying an empty array returns a validation error as at least one site needs to be assigned to the created operator or remain assigned to the operator being updated.",
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "site_id": {
+                        "type": "string",
+                        "description": "ID of the site that is assigned to the operator. The user adding or updating the operator must have access to the site."
+                      },
+                      "team_ids": {
+                        "type": "array",
+                        "description": "An array of team IDs that are assigned to the operator. The assigned teams must belonged to the operator's site, otherwise a validation error is returned. If `team_ids` is not specified, then perator will be assigned to the General team. The provided team IDs will replace the existing team assignments.",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                },
+                "max_engagement_count": {
+                  "type": "integer",
+                  "description": "Maximum number of concurrent engagements allowed for this operator. If omitted, minimum allowed engagement count from assigned sites configuration will be used."
+                },
+                "picture_data": {
+                  "type": "string",
+                  "description": "The operator’s picture in Base64 format."
+                },
+                "multi_engagement_default_availability": {
+                  "type": "string",
+                  "description": "Availability behaviour when the operator engages and multi-engagement is allowed. Allowed values are `unavailable` - operator is set to be unavailable, `chat` - operator availability is set to chat media, `retain` - previous availability is retained. If omitted, value from the assigned site configuration will be used."
+                },
+                "reactive_enabled": {
+                  "type": "boolean",
+                  "description": "If `true`, the operator is able to receive calls from visitors. `true` by default."
+                },
+                "proactive_enabled": {
+                  "type": "boolean",
+                  "description": "If `true`, the operator is able to initiate engagements with visitors. Default value is `true`. If `false` then operator is still able to place outbound phone calls if the site configuration allows."
+                },
+                "observation_enabled": {
+                  "type": "boolean",
+                  "description": "If `true`, the operator is able to observe visitors before engagements. Default value is `true`."
+                }
+              }
+            },
+            "description": "Set of parameters that can be sent along with the request to configure the operator.",
+            "x-examples": {
+              "Create operator": {
+                "name": "Jared Grey",
+                "email": "jared@institution.com",
+                "audio_source": "phone",
+                "phone": "+19174743334",
+                "phone_extension": ",,1,23",
+                "password": "password",
+                "password_confirmation": "password",
+                "picture_data": "data:image/png;base64,[Base64 encoded image]",
+                "assignments": [
+                  {
+                    "site_id": "$site_id",
+                    "team_ids": [
+                      "$team_id"
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The operator is successfully created.",
+            "schema": {
+              "type": "object",
+              "xml": {
+                "name": "Category"
+              },
+              "title": "Operator",
+              "x-tags": [
+                "operator"
+              ],
+              "description": "",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "The name of the operator."
+                },
+                "email": {
+                  "type": "string",
+                  "description": "The email of the operator. It must be unique."
+                },
+                "audio_source": {
+                  "type": "string",
+                  "description": "The audio device used for audio calls. One of `computer` or `phone` or `sip_phone`. Default value is `computer`. Additional audio sources may be added in the future."
+                },
+                "phone": {
+                  "type": "string",
+                  "description": "The phone number of the operator. The supported format is <a href=\"https://js-sdk-docs.salemove.com/extra/glossary.md.html#phone-numbers\">E.164</a>. Must be set if `audio_source` is `phone`."
+                },
+                "phone_extension": {
+                  "type": "string",
+                  "description": "The phone number extension of the operator. A valid extension contains 1-7 digits and any number of `,` characters. There is an initial two second delay time before the first extension character is processed. Each `,` character in the extension adds a two second wait time before the next character is processed. Maximum length is 25 characters. Valid only if `phone` is also set."
+                },
+                "sip_domain_id": {
+                  "type": "string",
+                  "description": "The ID of the SIP domain used for SIP calls. Must be set if `audio_source` is `sip_phone`."
+                },
+                "sip_extension": {
+                  "type": "string",
+                  "description": "The SIP extension of the operator. Maximum length is 30 characters. An RFC3261 compliant format is supported. Valid only if `sip_domain_id` is also set. Must be set if `audio_source` is `sip_phone`."
+                },
+                "password": {
+                  "type": "string",
+                  "description": "The password of the operator."
+                },
+                "password_confirmation": {
+                  "type": "string",
+                  "description": "The password of the operator. The value of the fields `password` and `password_confirmation` must be identical."
+                },
+                "assignments": {
+                  "description": "An array of operator's assignments. Specifying an empty array returns a validation error as at least one site needs to be assigned to the created operator or remain assigned to the operator being updated.",
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "site_id": {
+                        "type": "string",
+                        "description": "ID of the site that is assigned to the operator. The user adding or updating the operator must have access to the site."
+                      },
+                      "team_ids": {
+                        "type": "array",
+                        "description": "An array of team IDs that are assigned to the operator. The assigned teams must belonged to the operator's site, otherwise a validation error is returned. If `team_ids` is not specified, then perator will be assigned to the General team. The provided team IDs will replace the existing team assignments.",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                },
+                "max_engagement_count": {
+                  "type": "integer",
+                  "description": "Maximum number of concurrent engagements allowed for this operator. If omitted, minimum allowed engagement count from assigned sites configuration will be used."
+                },
+                "picture_data": {
+                  "type": "string",
+                  "description": "The operator’s picture in Base64 format."
+                },
+                "multi_engagement_default_availability": {
+                  "type": "string",
+                  "description": "Availability behaviour when the operator engages and multi-engagement is allowed. Allowed values are `unavailable` - operator is set to be unavailable, `chat` - operator availability is set to chat media, `retain` - previous availability is retained. If omitted, value from the assigned site configuration will be used."
+                },
+                "reactive_enabled": {
+                  "type": "boolean",
+                  "description": "If `true`, the operator is able to receive calls from visitors. `true` by default."
+                },
+                "proactive_enabled": {
+                  "type": "boolean",
+                  "description": "If `true`, the operator is able to initiate engagements with visitors. Default value is `true`. If `false` then operator is still able to place outbound phone calls if the site configuration allows."
+                },
+                "observation_enabled": {
+                  "type": "boolean",
+                  "description": "If `true`, the operator is able to observe visitors before engagements. Default value is `true`."
+                }
+              }
+            },
+            "examples": {
+              "POST operator 200": {
+                "href": "https://api.salemove.com/operators/f42811bc-8519-4d33-bbb1-36d4555ecb0a",
+                "id": "f42811bc-8519-4d33-bbb1-36d4555ecb0a",
+                "name": "Jared Grey",
+                "email": "jared.grey@institution.com",
+                "available": true,
+                "enabled": true,
+                "available_media_types": [],
+                "max_engagement_count": null,
+                "multi_engagement_default_availability": null,
+                "visible_in_operator_editor": true,
+                "reactive_enabled": true,
+                "proactive_enabled": true,
+                "observation_enabled": true,
+                "engagements": [],
+                "engagement_requests": [],
+                "role": "operator",
+                "picture": {
+                  "url": "https://uploads.salemove.com/user_assets/operator-1-jared-f42811bc-8519-4d33-bbb1-36d4555ecb0a.jpg"
+                },
+                "audio_source": "phone",
+                "phone": "+19174743334",
+                "phone_extension": ",,1,23",
+                "teams": [
+                  {
+                    "id": "00535468-76d2-438b-bea7-ed9f91c234dc",
+                    "name": "General",
+                    "site_id": "7d5635b0-88ed-4109-8398-dcd151754640"
+                  }
+                ],
+                "assignments": [
+                  {
+                    "site_id": "7d5635b0-88ed-4109-8398-dcd151754640",
+                    "team_ids": [
+                      "00535468-76d2-438b-bea7-ed9f91c234dc"
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Operator": {
+      "type": "object",
+      "xml": {
+        "name": "Category"
+      },
+      "title": "Operator",
+      "x-tags": [
+        "operator"
+      ],
+      "description": "",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the operator."
+        },
+        "email": {
+          "type": "string",
+          "description": "The email of the operator. It must be unique."
+        },
+        "audio_source": {
+          "type": "string",
+          "description": "The audio device used for audio calls. One of `computer` or `phone` or `sip_phone`. Default value is `computer`. Additional audio sources may be added in the future."
+        },
+        "phone": {
+          "type": "string",
+          "description": "The phone number of the operator. The supported format is <a href=\"https://js-sdk-docs.salemove.com/extra/glossary.md.html#phone-numbers\">E.164</a>. Must be set if `audio_source` is `phone`."
+        },
+        "phone_extension": {
+          "type": "string",
+          "description": "The phone number extension of the operator. A valid extension contains 1-7 digits and any number of `,` characters. There is an initial two second delay time before the first extension character is processed. Each `,` character in the extension adds a two second wait time before the next character is processed. Maximum length is 25 characters. Valid only if `phone` is also set."
+        },
+        "sip_domain_id": {
+          "type": "string",
+          "description": "The ID of the SIP domain used for SIP calls. Must be set if `audio_source` is `sip_phone`."
+        },
+        "sip_extension": {
+          "type": "string",
+          "description": "The SIP extension of the operator. Maximum length is 30 characters. An RFC3261 compliant format is supported. Valid only if `sip_domain_id` is also set. Must be set if `audio_source` is `sip_phone`."
+        },
+        "password": {
+          "type": "string",
+          "description": "The password of the operator."
+        },
+        "password_confirmation": {
+          "type": "string",
+          "description": "The password of the operator. The value of the fields `password` and `password_confirmation` must be identical."
+        },
+        "assignments": {
+          "description": "An array of operator's assignments. Specifying an empty array returns a validation error as at least one site needs to be assigned to the created operator or remain assigned to the operator being updated.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "site_id": {
+                "type": "string",
+                "description": "ID of the site that is assigned to the operator. The user adding or updating the operator must have access to the site."
+              },
+              "team_ids": {
+                "type": "array",
+                "description": "An array of team IDs that are assigned to the operator. The assigned teams must belonged to the operator's site, otherwise a validation error is returned. If `team_ids` is not specified, then perator will be assigned to the General team. The provided team IDs will replace the existing team assignments.",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "max_engagement_count": {
+          "type": "integer",
+          "description": "Maximum number of concurrent engagements allowed for this operator. If omitted, minimum allowed engagement count from assigned sites configuration will be used."
+        },
+        "picture_data": {
+          "type": "string",
+          "description": "The operator’s picture in Base64 format."
+        },
+        "multi_engagement_default_availability": {
+          "type": "string",
+          "description": "Availability behaviour when the operator engages and multi-engagement is allowed. Allowed values are `unavailable` - operator is set to be unavailable, `chat` - operator availability is set to chat media, `retain` - previous availability is retained. If omitted, value from the assigned site configuration will be used."
+        },
+        "reactive_enabled": {
+          "type": "boolean",
+          "description": "If `true`, the operator is able to receive calls from visitors. `true` by default."
+        },
+        "proactive_enabled": {
+          "type": "boolean",
+          "description": "If `true`, the operator is able to initiate engagements with visitors. Default value is `true`. If `false` then operator is still able to place outbound phone calls if the site configuration allows."
+        },
+        "observation_enabled": {
+          "type": "boolean",
+          "description": "If `true`, the operator is able to observe visitors before engagements. Default value is `true`."
+        }
+      }
+    },
+    "Engagement": {
+      "type": "object",
+      "x-examples": {
+        "Engagement": {
+          "id": "eea868ad-9d58-4db9-a663-5fd766728980",
+          "engagement_type": "reactive",
+          "created_at": "2017-07-07T13:47:21.150Z",
+          "duration": 268,
+          "visitor_name": "Sasha Brown",
+          "visitor_browser": "Chrome",
+          "visitor_device_type": "mobile",
+          "visitor_id": "039124e6-b4e8-4a0d-b420-5b6696c7ecb4",
+          "cobrowsing_used": true,
+          "video_used": true,
+          "audio_used": true,
+          "flagged": false,
+          "queue_wait_time": 42,
+          "platform": "omnicore",
+          "audio_recording_urls": [
+            "https://api.salemove.com/sub_engagements/1122834/recordings/XaMiTQI"
+          ],
+          "crm_forwarded": false,
+          "summary_forwarded": false,
+          "visitor": {
+            "href": "https://api.salemove.com/visitors/039124e6-b4e8-4a0d-b420-5b6696c7ecb4"
+          },
+          "chat_transcript": {
+            "href": "https://api.salemove.com/engagements/eea868ad-9d58-4db9-a663-5fd766728980/chat_transcript"
+          },
+          "operators": [
+            {
+              "href": "https://api.salemove.com/operators/f42811bc-8519-4d33-bbb1-36d4555ecb0a"
+            },
+            {
+              "href": "https://api.salemove.com/operators/0fca6673-1938-4a1f-a72e-262c19700ab6"
+            }
+          ],
+          "queues": [
+            {
+              "id": "82af2b5d-4ea5-40c8-bab2-a87d39598a81",
+              "name": "Queue name"
+            }
+          ],
+          "legs": [
+            {
+              "id": "78cb0e78-c995-461c-8659-d2364025a33e",
+              "operator": {
+                "id": "f42811bc-8519-4d33-bbb1-36d4555ecb0a"
+              },
+              "site": {
+                "id": "9dd25b48-c988-48cd-a4c3-56384d317e41"
+              },
+              "requested_at": "2017-07-07T13:47:10.000Z",
+              "accepted_at": "2017-07-07T13:47:21.150Z",
+              "request_type": "reactive",
+              "request_source": "tab",
+              "offered_media_type": "video",
+              "accepted_media_type": "text",
+              "request_queues": [
+                {
+                  "id": "82af2b5d-4ea5-40c8-bab2-a87d39598a81",
+                  "name": "Queue name"
+                }
+              ],
+              "duration": 109,
+              "highest_visitor_media_type": "text",
+              "highest_operator_media_type": "text",
+              "used_cobrowsing": false,
+              "ended_at": "2017-07-07T13:49:10.150Z",
+              "end_reason": "transfer"
+            },
+            {
+              "id": "6a33a95a-472b-433d-b107-b1c5426e6865",
+              "operator": {
+                "id": "0fca6673-1938-4a1f-a72e-262c19700ab6"
+              },
+              "site": {
+                "id": "9dd25b48-c988-48cd-a4c3-56384d317e41"
+              },
+              "requested_at": "2017-07-07T13:48:55.000Z",
+              "accepted_at": "2017-07-07T13:49:10.150Z",
+              "request_type": "transfer",
+              "request_source": null,
+              "offered_media_type": "text",
+              "accepted_media_type": "text",
+              "request_queues": null,
+              "duration": 158,
+              "highest_visitor_media_type": "video",
+              "highest_operator_media_type": "audio",
+              "used_cobrowsing": true,
+              "ended_at": "2017-07-07T13:51:48.150Z",
+              "end_reason": "visitor_left"
+            }
+          ]
+        }
+      },
+      "title": "Engagement",
+      "description": "",
+      "x-tags": [
+        "engagement"
+      ],
+      "properties": {
+        "id": {
+          "description": "Engagement ID.",
+          "type": "string"
+        },
+        "engagement_type": {
+          "type": "string",
+          "description": "Engagement type. Can be one of `proactive`, `reactive`."
+        },
+        "created_at": {
+          "type": "string",
+          "description": "An ISO-8601 timestamp of when the engagement request was created."
+        },
+        "duration": {
+          "type": "integer",
+          "description": "Engagement duration in seconds."
+        },
+        "visitor_name": {
+          "type": "string",
+          "description": "Visitor's name."
+        },
+        "visitor_browser": {
+          "type": "string",
+          "description": "Visitor's browser."
+        },
+        "visitor_device_type": {
+          "type": "string",
+          "description": "Visitor's device type."
+        },
+        "visitor_id": {
+          "type": "string",
+          "description": "Visitor ID."
+        },
+        "cobrowsing_used": {
+          "type": "boolean",
+          "description": "Whether CoBrowsing was used or not. "
+        },
+        "video_used": {
+          "type": "boolean",
+          "description": "Whether video was used or not."
+        },
+        "audio_used": {
+          "type": "boolean",
+          "description": "Whether audio was used or not."
+        },
+        "flagged": {
+          "type": "boolean",
+          "description": "Whether the engagement has been flagged or not."
+        },
+        "summary_forwarded": {
+          "type": "boolean",
+          "description": "Whether the summary has already been forwarded."
+        },
+        "platform": {
+          "type": "string",
+          "description": "The platform where the engagement was initiated. Possible values are: `omnibrowse` - engagement was requested from Call Visualizer (either in Glia Hub or embedded in CRM), `omnicore` - all other cases."
+        },
+        "visitor": {
+          "description": "The visitor.",
+          "type": "object",
+          "properties": {
+            "href": {
+              "type": "string",
+              "description": "URL to visitor's information."
+            }
+          }
+        },
+        "chat_transcript": {
+          "description": "Engagement chat transcript.",
+          "type": "object",
+          "properties": {
+            "href": {
+              "type": "string",
+              "description": "URL to engagement's chat transcript."
+            }
+          }
+        },
+        "operators": {
+          "type": "array",
+          "description": "A list of engagement operators.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "href": {
+                "type": "string",
+                "description": "URL to operator's information."
+              }
+            }
+          }
+        },
+        "source": {
+          "type": "string",
+          "description": "One of engagement sources."
+        },
+        "queues": {
+          "type": "array",
+          "description": "A list of queues that the visitor was enqueued in before starting the engagement. This value is present only for reactive engagements started via queueing.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Queue name.\n"
+              },
+              "id": {
+                "type": "string",
+                "description": "Queue ID.\n"
+              }
+            }
+          }
+        },
+        "legs": {
+          "type": "array",
+          "description": "A list of engagement legs. Engagement starts with one leg. A leg is added each time the engagement is transferred.",
+          "items": {
+            "required": [
+              "id",
+              "site",
+              "requested_a",
+              "accepted_at",
+              "request_type",
+              "request_source",
+              "offered_media_type",
+              "accepted_media_type",
+              "duration",
+              "highest_visitor_media_type",
+              "highest_operator_media_type",
+              "used_cobrowsing",
+              "ended_at",
+              "end_reason",
+              "operator"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Engagement leg ID."
+              },
+              "site": {
+                "type": "object",
+                "description": "Site information.",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "Site's ID where this leg of the engagement  belongs to."
+                  }
+                }
+              },
+              "requested_a": {
+                "type": "string",
+                "description": "Engagement or transfer request ISO-8601 timestamp."
+              },
+              "accepted_at": {
+                "type": "string",
+                "description": "Engagement or transfer accept ISO-8601 timestamp."
+              },
+              "request_type": {
+                "type": "string",
+                "description": "Request type. Possible values are `reactive`, `proactive`, and `transfer`.",
+                "enum": [
+                  "reactive",
+                  "proactive",
+                  "transfer"
+                ]
+              },
+              "request_source": {
+                "type": "string",
+                "description": "Request source. See `enum` for available values.",
+                "enum": [
+                  "button_embed",
+                  "callout",
+                  "facebook",
+                  "hotlink",
+                  "offline_phone",
+                  "outbound_call",
+                  "outbound_text",
+                  "sdk",
+                  "slack",
+                  "sms",
+                  "tab",
+                  "visitor_integrator",
+                  "whatsapp",
+                  "<empty>"
+                ]
+              },
+              "offered_media_type": {
+                "type": "string",
+                "description": "Engagement offered or requested media type. Possible values are `text`, `audio`, `phone` and `video`.",
+                "enum": [
+                  "text",
+                  "audio",
+                  "phone",
+                  "video"
+                ]
+              },
+              "accepted_media_type": {
+                "type": "string",
+                "description": "Engagement accepted media type. Possible values are `text`, `audio`, `phone` and `video`.",
+                "enum": [
+                  "text",
+                  "audio",
+                  "phone",
+                  "video"
+                ]
+              },
+              "request_queues": {
+                "type": "array",
+                "description": "Engagement or transfer request queues. NULL if queues were not used.",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "description": "Queue ID."
+                    },
+                    "name": {
+                      "type": "string",
+                      "description": "Queue name."
+                    }
+                  }
+                }
+              },
+              "duration": {
+                "type": "integer",
+                "description": "Engagement leg duration in seconds."
+              },
+              "highest_visitor_media_type": {
+                "type": "string",
+                "description": "Highest media type visitor used during this engagement leg. Possible values are `text`, `audio` and `video`.",
+                "enum": [
+                  "text",
+                  "audio",
+                  "video"
+                ]
+              },
+              "highest_operator_media_type": {
+                "type": "string",
+                "description": "Highest media type operator used during this engagement leg. Possible values are `text`, `audio` and `video`. ",
+                "enum": [
+                  "text",
+                  "audio",
+                  "video"
+                ]
+              },
+              "used_cobrowsing": {
+                "type": "boolean",
+                "description": "True, if CoBrowsing was used during the engagement, otherwise false."
+              },
+              "ended_at": {
+                "type": "string",
+                "description": "ISO-8601 timestamp when engagement was ended or when engagement was transferred out."
+              },
+              "end_reason": {
+                "type": "string",
+                "description": "Engagement leg end reason. Possible values are `visitor_left`, `visitor_hung_up`, `operator_left`, `operator_hung_up`, `error` and `transfer`. ",
+                "enum": [
+                  "visitor_left",
+                  "visitor_hung_up",
+                  "operator_left",
+                  "operator_hung_up",
+                  "error",
+                  "transfer"
+                ]
+              },
+              "operator": {
+                "type": "object",
+                "description": "Operator information.",
+                "required": [
+                  "id"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "Operator's ID."
+                  }
+                }
+              }
+            },
+            "description": "",
+            "x-examples": {
+              "Leg": {
+                "id": "78cb0e78-c995-461c-8659-d2364025a33e",
+                "operator": {
+                  "id": "f42811bc-8519-4d33-bbb1-36d4555ecb0a"
+                },
+                "site": {
+                  "id": "9dd25b48-c988-48cd-a4c3-56384d317e41"
+                },
+                "requested_at": "2017-07-07T13:47:10.000Z",
+                "accepted_at": "2017-07-07T13:47:21.150Z",
+                "request_type": "reactive",
+                "request_source": "tab",
+                "offered_media_type": "video",
+                "accepted_media_type": "text",
+                "request_queues": [
+                  {
+                    "id": "82af2b5d-4ea5-40c8-bab2-a87d39598a81",
+                    "name": "Queue name"
+                  }
+                ],
+                "duration": 109,
+                "highest_visitor_media_type": "text",
+                "highest_operator_media_type": "text",
+                "used_cobrowsing": false,
+                "ended_at": "2017-07-07T13:49:10.150Z",
+                "end_reason": "transfer"
+              }
+            },
+            "x-tags": [
+              "engagement"
+            ],
+            "type": "object",
+            "title": "Leg"
+          }
+        },
+        "queue_wait_time": {
+          "type": "integer",
+          "description": "The time visitor spent in queue before the engagement, in seconds. This value is present only for reactive engagements started via queueing. "
+        },
+        "audio_recording_urls": {
+          "type": "array",
+          "description": "A list of audio recordings URLs.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "crm_forwarded": {
+          "type": "boolean",
+          "description": "Whether the CRM Export has already occurred or not."
+        }
+      },
+      "required": [
+        "id",
+        "engagement_type",
+        "created_at",
+        "duration",
+        "visitor_name",
+        "visitor_browser",
+        "visitor_device_type",
+        "visitor_id",
+        "cobrowsing_used",
+        "video_used",
+        "audio_used",
+        "flagged",
+        "summary_forwarded",
+        "platform",
+        "visitor",
+        "chat_transcript",
+        "operators",
+        "legs",
+        "audio_recording_urls",
+        "crm_forwarded"
+      ]
+    },
+    "Engagement-Request": {
+      "type": "object",
+      "xml": {
+        "name": "Order"
+      },
+      "title": "Engagement Request",
+      "x-tags": [
+        "engagement"
+      ],
+      "x-examples": {
+        "Engagement Request": {
+          "visitor_id": "02cebb3a-7f7d-4be8-9445-911daa26ac1f",
+          "site_id": "7d5635b0-88ed-4109-8398-dcd151754640",
+          "created_at": "2017-02-20T00:00:00Z"
+        }
+      },
+      "properties": {
+        "site_id": {
+          "format": "int64",
+          "type": "string",
+          "description": "ID of the engagement request's site."
+        },
+        "vsisitor_id": {
+          "format": "int64",
+          "type": "string",
+          "description": "ID of the visitor."
+        },
+        "created_at": {
+          "format": "int32",
+          "type": "string",
+          "description": "An ISO-8601 timestamp of when the Engagement Request was created."
+        }
+      },
+      "required": [
+        "site_id",
+        "vsisitor_id",
+        "created_at"
+      ]
+    },
+    "Generic-URL": {
+      "type": "object",
+      "xml": {
+        "name": "User"
+      },
+      "title": "Generic URL",
+      "properties": {
+        "href": {
+          "type": "string",
+          "description": "Generic model to be used to describe the oprators, visitors, etc who are in some context described only as their URLs."
+        }
+      }
+    },
+    "Leg": {
+      "title": "Leg",
+      "type": "object",
+      "x-tags": [
+        "engagement"
+      ],
+      "x-examples": {
+        "Leg": {
+          "id": "78cb0e78-c995-461c-8659-d2364025a33e",
+          "operator": {
+            "id": "f42811bc-8519-4d33-bbb1-36d4555ecb0a"
+          },
+          "site": {
+            "id": "9dd25b48-c988-48cd-a4c3-56384d317e41"
+          },
+          "requested_at": "2017-07-07T13:47:10.000Z",
+          "accepted_at": "2017-07-07T13:47:21.150Z",
+          "request_type": "reactive",
+          "request_source": "tab",
+          "offered_media_type": "video",
+          "accepted_media_type": "text",
+          "request_queues": [
+            {
+              "id": "82af2b5d-4ea5-40c8-bab2-a87d39598a81",
+              "name": "Queue name"
+            }
+          ],
+          "duration": 109,
+          "highest_visitor_media_type": "text",
+          "highest_operator_media_type": "text",
+          "used_cobrowsing": false,
+          "ended_at": "2017-07-07T13:49:10.150Z",
+          "end_reason": "transfer"
+        }
+      },
+      "description": "",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Engagement leg ID."
+        },
+        "site": {
+          "type": "object",
+          "description": "Site information.",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "Site's ID where this leg of the engagement  belongs to."
+            }
+          }
+        },
+        "requested_a": {
+          "type": "string",
+          "description": "Engagement or transfer request ISO-8601 timestamp."
+        },
+        "accepted_at": {
+          "type": "string",
+          "description": "Engagement or transfer accept ISO-8601 timestamp."
+        },
+        "request_type": {
+          "type": "string",
+          "description": "Request type. Possible values are `reactive`, `proactive`, and `transfer`.",
+          "enum": [
+            "reactive",
+            "proactive",
+            "transfer"
+          ]
+        },
+        "request_source": {
+          "type": "string",
+          "description": "Request source. See `enum` for available values.",
+          "enum": [
+            "button_embed",
+            "callout",
+            "facebook",
+            "hotlink",
+            "offline_phone",
+            "outbound_call",
+            "outbound_text",
+            "sdk",
+            "slack",
+            "sms",
+            "tab",
+            "visitor_integrator",
+            "whatsapp",
+            "<empty>"
+          ]
+        },
+        "offered_media_type": {
+          "type": "string",
+          "description": "Engagement offered or requested media type. Possible values are `text`, `audio`, `phone` and `video`.",
+          "enum": [
+            "text",
+            "audio",
+            "phone",
+            "video"
+          ]
+        },
+        "accepted_media_type": {
+          "type": "string",
+          "description": "Engagement accepted media type. Possible values are `text`, `audio`, `phone` and `video`.",
+          "enum": [
+            "text",
+            "audio",
+            "phone",
+            "video"
+          ]
+        },
+        "request_queues": {
+          "type": "array",
+          "description": "Engagement or transfer request queues. NULL if queues were not used.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Queue ID."
+              },
+              "name": {
+                "type": "string",
+                "description": "Queue name."
+              }
+            }
+          }
+        },
+        "duration": {
+          "type": "integer",
+          "description": "Engagement leg duration in seconds."
+        },
+        "highest_visitor_media_type": {
+          "type": "string",
+          "description": "Highest media type visitor used during this engagement leg. Possible values are `text`, `audio` and `video`.",
+          "enum": [
+            "text",
+            "audio",
+            "video"
+          ]
+        },
+        "highest_operator_media_type": {
+          "type": "string",
+          "description": "Highest media type operator used during this engagement leg. Possible values are `text`, `audio` and `video`. ",
+          "enum": [
+            "text",
+            "audio",
+            "video"
+          ]
+        },
+        "used_cobrowsing": {
+          "type": "boolean",
+          "description": "True, if CoBrowsing was used during the engagement, otherwise false."
+        },
+        "ended_at": {
+          "type": "string",
+          "description": "ISO-8601 timestamp when engagement was ended or when engagement was transferred out."
+        },
+        "end_reason": {
+          "type": "string",
+          "description": "Engagement leg end reason. Possible values are `visitor_left`, `visitor_hung_up`, `operator_left`, `operator_hung_up`, `error` and `transfer`. ",
+          "enum": [
+            "visitor_left",
+            "visitor_hung_up",
+            "operator_left",
+            "operator_hung_up",
+            "error",
+            "transfer"
+          ]
+        },
+        "operator": {
+          "type": "object",
+          "description": "Operator information.",
+          "required": [
+            "id"
+          ],
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "Operator's ID."
+            }
+          }
+        }
+      },
+      "required": [
+        "id",
+        "site",
+        "requested_a",
+        "accepted_at",
+        "request_type",
+        "request_source",
+        "offered_media_type",
+        "accepted_media_type",
+        "duration",
+        "highest_visitor_media_type",
+        "highest_operator_media_type",
+        "used_cobrowsing",
+        "ended_at",
+        "end_reason",
+        "operator"
+      ]
+    }
+  },
+  "externalDocs": {
+    "description": "Find out more about Swagger",
+    "url": "http://swagger.io"
+  }
+}
