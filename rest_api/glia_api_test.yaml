@@ -17,7 +17,7 @@ paths:
     get:
       tags:
         - Engagements
-      summary: Engagements
+      summary: Get List of Engagements
       description: >-
         Fetches a collection of engagements and related data. The results are
         paginated, and sorted by `start_date` in descending order.
