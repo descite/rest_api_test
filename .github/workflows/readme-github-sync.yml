@@ -1,6 +1,9 @@
 name: Sync to ReadMe
 
-on: [push]
+on: 
+  push:
+    branches: 
+      - readme-sync
 
 jobs:
   build:
