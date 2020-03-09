@@ -19,7 +19,7 @@ paths:
         - Operators
       summary: Create a New Operator
       description: Creates a new operator.
-      operationId: uploadFile
+      operationId: create-operator
       consumes:
         - multipart/form-data
       produces:

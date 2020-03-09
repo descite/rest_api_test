@@ -570,6 +570,7 @@ paths:
       tags:
         - Engagements
       summary: Engagement
+      operationId: get-engagement
       description: >-
         Fetches a single engagement by `engagement_id`. The user whose
         credentials are contained in the `Authorization` request header must be
