@@ -1,4 +1,7 @@
-# HTML and CSS Customizations
+---
+title: "HTML and CSS Customizations"
+excerpt: "Testing the markdown import via ReadMe API."
+---
 
 ## Cobrowsing
 
