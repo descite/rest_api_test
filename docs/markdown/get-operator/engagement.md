@@ -1,6 +1,10 @@
 # Engagement
 
-Adding random texgt to see if stoplight updates itself.
+Adding random text to see if Stoplight updates itself.
+
+Also adding a picture.
+
+![Tea](../../../assets/images/tea.jpeg)
 
 | Field        | Type      | Required | Description                                           |
 | :----------- | :-------- | :------- | :---------------------------------------------------- |
