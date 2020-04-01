@@ -3,7 +3,7 @@
   "info": {
     "version": "2.0",
     "description": "The platform REST API is the foundation of programmatic access to Glia and provides a robust set of endpoints that cover all Glia functions - this includes the management and configuration of sites, operators, queues, channels, etc. as well as controlling engagements, getting statistics and many more. It allows for clients to integrate Glia with their existing systems, other tools and automate a lot of tasks.",
-    "title": "REST API"
+    "title": "Engagements"
   },
   "host": "api.salemove.com",
   "schemes": [
