@@ -1,0 +1,32 @@
+name: Extract branch name
+shell: bash
+run: echo "::set-env name=BRANCH_NAME::$(echo ${GITHUB_REF#refs/heads/} | sed 's/\//_/g')"
+
+name: Test
+run: echo "${BRANCH_NAME}"
+
+name: Sync to ReadMe
+on: 
+ push:
+  branches: 
+   - ${BRANCH_NAME}
+jobs:
+ build:
+
+  runs-on: ubuntu-latest
+    
+  steps:
+  - uses: readmeio/github-readme-sync@1.0.3
+   with:
+    repo-token: '${{ secrets.GITHUB_TOKEN }}' # DON'T MODIFY--Allows us to get the contents of your spec file
+    readme-api-id: '5e66202d876c54002efa833d' # The engagement's endpoints definition
+    api-file-path: '/rest_api/glia_api_test.json' # path to API spec file
+    readme-api-key: '1rtOVaHN6Q40D04hOOtEbKdJ0ZxTDWJs' # ReadMe API key 
+    readme-api-version: '${BRANCH_NAME}' # ReadMe version to sync to
+  - uses: readmeio/github-readme-sync@1.0.3
+   with:
+    repo-token: '${{ secrets.GITHUB_TOKEN }}' # DON'T MODIFY--Allows us to get the contents of your spec file
+    readme-api-id: '58456757397853576f4f4942' # The operator's endpoints definition
+    api-file-path: '/rest_api/operators.yaml' # path to API spec file
+    readme-api-key: '1rtOVaHN6Q40D04hOOtEbKdJ0ZxTDWJs' # ReadMe API key 
+    readme-api-version: '${BRANCH_NAME}' # ReadMe version to sync to
