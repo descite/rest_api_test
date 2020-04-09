@@ -8,7 +8,7 @@ info:
     channels, etc. as well as controlling engagements, getting statistics and
     many more. It allows for clients to integrate Glia with their existing
     systems, other tools and automate a lot of tasks.
-  title: Operators
+  title: Operators Test
 host: api.salemove.com
 schemes:
   - https
