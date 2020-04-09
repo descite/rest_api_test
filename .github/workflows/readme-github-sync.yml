@@ -1,8 +1,9 @@
 name: Sync to ReadMe
 on: 
-  push:
+  pull_request:
     branches: 
       - ${GITHUB_REF##*/}
+      - master
 
 jobs:
   build:
