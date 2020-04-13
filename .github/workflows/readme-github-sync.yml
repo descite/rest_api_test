@@ -17,7 +17,7 @@ jobs:
            -X POST
            -u 1rtOVaHN6Q40D04hOOtEbKdJ0ZxTDWJs:
            -H "Content-Type: application/json"
-           -d "{\"is_beta\":true, \"version\":\"${{ github.head_ref }}\", \"from\":\"2.0\"}"
+           --data-binary "{\"is_beta\":true, \"version\":\"${{ github.head_ref }}\", \"from\":\"2.0\"}"
            https://dash.readme.io/api/v1/version
   build:
     needs: curl
