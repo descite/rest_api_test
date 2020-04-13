@@ -18,7 +18,7 @@ jobs:
            -u 1rtOVaHN6Q40D04hOOtEbKdJ0ZxTDWJs:
            -H "content-type: application/json"
            -d "{\"is_beta\":true, \"version\":\"${{ github.head_ref }}\", \"from\":\"2.0\"}"
-           --url https://dash.readme.io/api/v1/version
+           "https://dash.readme.io/api/v1/version"
   build:
     needs: curl
     runs-on: ubuntu-latest
